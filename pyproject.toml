@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "crypto-clusters"
+version = "1.0.0"
+description = "Unsupervised clustering of 41 cryptocurrencies by price-change profile: K-means with an elbow and silhouette-based choice of k, PCA with explained variance and loadings, an HDBSCAN comparison, and a generated report."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Freddrick Logan" }]
+dependencies = ["numpy>=2.0", "pandas>=2.2", "scikit-learn>=1.5", "typer>=0.12"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-cov>=5.0", "ruff>=0.6", "mypy>=1.11", "pandas-stubs>=2.2", "bandit>=1.7", "pip-audit>=2.7"]
+
+[project.scripts]
+crypto-clusters = "crypto_clusters.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/crypto_clusters"]
+
+[tool.hatch.build]
+include = ["src/crypto_clusters/**"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "UP", "B", "C4", "DTZ", "S", "SIM", "RUF", "T20", "PTH", "RET", "ARG"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ARG001"]
+"src/crypto_clusters/cli.py" = ["T20"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["sklearn", "sklearn.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["crypto_clusters"]
+omit = ["src/crypto_clusters/cli.py"]
+
+[tool.coverage.report]
+show_missing = true
