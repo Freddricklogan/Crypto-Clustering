@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Crypto Clustering — K-means, PCA and HDBSCAN on 41 coins</title>
+<meta name="description" content="Unsupervised clustering of 41 cryptocurrencies by price-change profile: elbow and silhouette rules for k, PCA explained variance and loadings, HDBSCAN comparison, adjusted Rand index; generated in CI. By Freddrick Logan.">
+<meta name="author" content="Freddrick Logan">
+<link rel="canonical" href="$pages">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b1220'/%3E%3Ccircle cx='11' cy='12' r='3' fill='%2358a6ff'/%3E%3Ccircle cx='8' cy='19' r='2.5' fill='%2358a6ff'/%3E%3Ccircle cx='22' cy='20' r='3' fill='%233fb950'/%3E%3Ccircle cx='24' cy='12' r='2' fill='%23d29922'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap">
+<link rel="stylesheet" href="src/exec-shell.css">
+<link rel="stylesheet" href="src/report.css">
+<script type="application/json" id="report-data">$report_json</script>
+</head>
+<body>
+<main id="demo-root" class="exec-main">
+  <h2 class="sr-only">Clustering report</h2>
+  <p class="cc-note"><strong>Data:</strong> $source. $coins coins, $features standardised features. Every figure on this page was computed by <code>crypto-clusters report --seed $seed</code> in the CI run that published it. Nothing here is investment advice; the coins are a fixed snapshot.</p>
+
+  <section class="cc-panel" id="s-k" aria-labelledby="h-k">
+    <h3 id="h-k">1. Choosing k, by two stated rules</h3>
+    <p class="cc-lead">K-means was run for k = 1 to 11 with ten initialisations each. The knee of the inertia curve (largest distance below the chord) picks <strong>k = $elbow</strong>; the highest silhouette picks <strong>k = $best</strong> (silhouette $sil_best against $sil_elbow at the elbow). At k = $elbow, $singletons cluster(s) contain a single coin — outliers the method isolates rather than groups.</p>
+    <div class="cc-grid">
+      <div><h4>Inertia by k</h4>$elbow_chart</div>
+      <div><h4>Sweep</h4><div class="cc-scroll">$sweep_table</div></div>
+    </div>
+    <h4>Members at k = $elbow (elbow)</h4>
+    <div class="cc-scroll">$members</div>
+    <h4>Members at k = $best (best silhouette)</h4>
+    <div class="cc-scroll">$members_alt</div>
+  </section>
+
+  <section class="cc-panel" id="s-pca" aria-labelledby="h-pca">
+    <h3 id="h-pca">2. PCA: what the components mean, and whether clustering changes</h3>
+    <p class="cc-lead">Three principal components explain $explained of the variance ($explained_total in total). Clustering the PCA scores at k = $elbow gives an adjusted Rand index of <strong>$ari</strong> against the full-feature clustering (1 = identical partition).</p>
+    <div class="cc-grid">
+      <div><h4>Coins on PC1 and PC2, coloured by cluster (k = $elbow)</h4>$scatter</div>
+      <div><h4>Loadings</h4><div class="cc-scroll">$loadings</div></div>
+    </div>
+  </section>
+
+  <section class="cc-panel" id="s-hdb" aria-labelledby="h-hdb">
+    <h3 id="h-hdb">3. HDBSCAN: a method allowed to say "noise"</h3>
+    <p class="cc-lead">With a minimum cluster size of $hdb_min, HDBSCAN finds <strong>$hdb_clusters</strong> dense clusters and leaves <strong>$hdb_noise</strong> coins unassigned (silhouette over assigned points: $hdb_sil). K-means must place every coin; a density method need not, which suits a small, heavy-tailed table.</p>
+    <div class="cc-scroll">$hdb_table</div>
+  </section>
+
+  <p class="cc-note">Raw numbers: <a href="report.json">report.json</a>.</p>
+</main>
+<script type="module" src="src/report.js"></script>
+</body>
+</html>
