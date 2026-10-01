@@ -38,7 +38,7 @@ small heavy-tailed table. CI builds and publishes the report.
   variance and loadings, HDBSCAN, adjusted Rand index.
 - **Data Engineering** — schema validation, standardisation, vendored
   data with provenance, reproducibility from one seed.
-- **Engineering Practice** — typed package with a CLI, 9 tests at
+- **Engineering Practice** — typed package with a CLI, 10 tests at
   100 % statement coverage including synthetic-curve tests of the
   selection rules, ruff / mypy strict / bandit / pip-audit / Trivy,
   static report generated and deployed by CI.
@@ -49,7 +49,7 @@ small heavy-tailed table. CI builds and publishes the report.
 flowchart LR
   subgraph TB0["Trust Boundary: CI runner (GitHub Actions)"]
     DATA[("data/crypto_market_data.csv<br/>41 coins × 7 horizons")]:::data
-    subgraph PKG["crypto_clusters (9 tests, 100% stmts)"]
+    subgraph PKG["crypto_clusters (10 tests, 100% stmts)"]
       D["data.py<br/>load · validate · scale"]:::service
       A["analysis.py<br/>sweep_k · elbow_k · silhouette_k · cluster · project · density · agreement"]:::service
       R["report.py<br/>tables · SVG charts · report.json"]:::service
